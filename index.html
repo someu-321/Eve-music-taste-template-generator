@@ -500,7 +500,7 @@
             const target = document.getElementById('capture-area');
             html2canvas(target, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'artist-music-taste.png';
+                link.download = 'Eve-music-taste.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
