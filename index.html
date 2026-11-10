@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아티스트 음악 취향표 메이커</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas 라이브러리 (이미지 저장용) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-sky-50 min-h-screen py-10 px-4 flex flex-col items-center">
+
+    <!-- 캡처 영역 시작 -->
+    <div id="capture-area" class="bg-sky-50 w-full max-w-2xl p-6 flex flex-col items-center">
+        
+        <header class="text-center mb-8 w-full flex flex-col items-center">
+              <!-- 첫 번째 줄: 아티스트 음악 취향표 타이틀 (수정 불가) -->
+              <h1 class="text-3xl font-extrabold text-gray-900 px-2">
+                    Eve 음악 취향표
+              </h1>
+    
+              <!-- 두 번째 줄: 중앙 정렬된 회색빛 'by 닉네임' 영역 -->
+              <p class="text-gray-500 text-sm mt-2 w-full text-center flex items-center justify-center font-medium">
+                    <span>by&nbsp;</span>
+                    <span contenteditable="true" id="nickname-input" class="outline-none border-b border-transparent focus:border-gray-400 px-1 text-gray-500 text-center">닉네임 입력</span>
+              </p>
+        </header>
+
+        <!-- 15칸 그리드 카드 영역 -->
+        <div class="grid grid-cols-3 grid-rows-5 gap-4 w-full mb-6">
+            
+            <!-- 1. Wonder Word -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Wonder Word" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">Wonder Word</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 2. Round Robin -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Round Robin" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">Round Robin</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 3. OFFICIAL NUMBER -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="OFFICIAL NUMBER" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">OFFICIAL NUMBER</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 4. 文化 -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="文化" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">文化</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 5. おとぎ -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="おとぎ" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">おとぎ</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 6. Smile -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Smile" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">Smile</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 7. 廻廻奇譚 / 蒼のワルツ -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="廻廻奇譚 / 蒼のワルツ" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">廻廻奇譚 / 蒼のワルツ</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 8. 廻人 -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="廻人" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">廻人</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 9. ぼくらの -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="ぼくらの" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">ぼくらの</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 10. Under Blue -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Under Blue" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">Under Blue</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 11. AIYOU -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="AIYOU" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">AIYOU</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 12. CD 미발매 디지털 음원 -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="CD x" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">CD 미발매 디지털 음원</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 13. Vocaloid -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Vocaloid" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">Vocaloid</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 14. 전곡 -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="All" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">곡 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">전곡</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">곡 제목</p>
+                </div>
+            </div>
+
+            <!-- 15. 앨범 -->
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-between">
+                <div onclick="openAlbumSelector(this)" data-category="Album" class="w-full aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center cursor-pointer overflow-hidden relative border-2 border-dashed border-gray-300 hover:border-gray-400 transition group">
+                    <span class="text-gray-400 text-3xl group-hover:scale-110 transition">+</span>
+                    <span class="text-xs text-gray-400 mt-1">앨범 선택</span>
+                    <img class="absolute inset-0 w-full h-full object-cover hidden" alt="Preview">
+                </div>
+                <div class="w-full text-center py-3 flex flex-col items-center justify-center">
+                    <p contenteditable="true" class="text-xs font-semibold text-gray-500 outline-none">최애 앨범</p>
+                    <p class="song-title text-sm font-bold text-gray-800 mt-0.5">앨범 제목</p>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="text-center">
+            <p contenteditable="true" class="text-xs text-gray-500 outline-none"> 문의: X(Twitter) @_____miyoshi </p>
+        </footer>
+
+    </div>
+
+    <!-- 다운로드 버튼 -->
+    <div class="mt-6">
+        <button onclick="downloadImage()" class="bg-gray-900 hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+            📸 이미지로 저장하기
+        </button>
+    </div>
+
+    <!-- 앨범 선택 모달 팝업 구조 -->
+    <div id="album-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-bold text-gray-900">앨범 선택</h3>
+                <button onclick="closeAlbumSelector()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <!-- 카테고리에 맞는 목록이 동적으로 들어갈 공간 -->
+            <div id="album-list" class="grid grid-cols-2 gap-3 overflow-y-auto pr-1">
+                <!-- 자바스크립트로 자동 생성됨 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 자바스크립트 로직 -->
+    <script>
+        const albumDatabase = [
+            // Wonder Word
+            { category: ["Wonder Word", "All"], title: "よるのゆめ", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "アルカリ成人", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "線香花火", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "ヘロウメロウ", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "蜃気楼", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "またあした", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            { category: ["Wonder Word", "All"], title: "夜を超えろ", albumName: "Wonder Word", img: "images/img_wonderword.jpg" },
+            
+            // Round Robin
+            { category: ["Round Robin", "All"], title: "名前も知らないあなたに恋をした", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "Round Robin", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "右に曲ガール", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "不完全な処遇 album ver", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "反対車線", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "フォーリンマイワールド", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "メルファクトリー", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "新宿シック", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "いかないで album ver", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+            { category: ["Round Robin", "All"], title: "グッバイデイ", albumName: "Round Robin", img: "images/img_roundrobin.jpg" },
+
+            // OFFICIAL NUMBER
+            { category: ["OFFICIAL NUMBER", "All"], title: "どうしようもないくらいに君が好き", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "キャラバン", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "惑星ループ", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "デーモンダンストーキョー", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "浮遊感", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "ショートアンブレラ", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "ラビットグレイ", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "パーフェクト生命", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "メルファクトリー(リアレンジver)", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+            { category: ["OFFICIAL NUMBER", "All"], title: "sister(リアレンジver)", albumName: "OFFICIAL NUMBER", img: "images/img_officialnumber.jpg" },
+
+            // 文化
+            { category: ["文化", "All"], title: "fanfare (instrumental)", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "ナンセンス文学", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "ドラマツルギー", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "ホームシック", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "あの娘シークレット", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "会心劇", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "ふりをした。", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "羊を数えて", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "お気に召すまま", albumName: "文化", img: "images/img_bunka.jpg" },
+            { category: ["文化", "All"], title: "paradigm (instrumental)", albumName: "文化", img: "images/img_bunka.jpg" },
+            // おとぎ
+            { category: ["おとぎ", "All"], title: "slumber", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "トーキョーゲットー", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "アウトサイダー", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "迷い子", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "やどりぎ", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "アンビバレント", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "楓", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "ラストダンス", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "僕らまだアンダーグラウンド", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "君に世界", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+            { category: ["おとぎ", "All"], title: "dawn", albumName: "おとぎ", img: "images/img_otogi.jpg" },
+
+            // Smile
+            { category: ["Smile", "All"], title: "doublet", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "LEO", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "レーゾンデートル", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "虚の記憶", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "いのちの食べ方", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "闇夜", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "朝が降る", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "心予報", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "白銀", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "バウムクーヘンエンド", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "mellow", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "ognanje", albumName: "Smile", img: "images/img_smile.jpg" },
+            { category: ["Smile", "All"], title: "胡乱な食卓", albumName: "Smile", img: "images/img_smile.jpg" },
+
+            // 廻廻奇譚 / 蒼のワルツ
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "廻廻奇譚", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "蒼のワルツ", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "心海", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "宵の明星", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "遊遊冥冥", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "約束", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["廻廻奇譚 / 蒼のワルツ", "All"], title: "杪夏", albumName: "廻廻奇譚 / 蒼のワルツ", img: "images/img_kaikaiwarutsu.jpg" },
+
+            // 廻人
+            { category: ["廻人", "All"], title: "廻人", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "廻廻奇譚", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "夜は仄か", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "遊生夢死", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "暴徒", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "平行線", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "YOKU", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "蒼のワルツ", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "心海", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "群青讃歌", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "言の葉", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "藍才", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "退屈を再演しないで", albumName: "廻人", img: "images/img_kaizin.jpg" },
+            { category: ["廻人", "All"], title: "アヴァン", albumName: "廻人", img: "images/img_kaizin.jpg" },
+
+            // ぼくらの
+            { category: ["ぼくらの", "All"], title: "ぼくらの", albumName: "ぼくらの", img: "images/img_ep_bokurano.jpg" },
+            { category: ["ぼくらの", "All"], title: "虎狼来", albumName: "ぼくらの", img: "images/img_ep_bokurano.jpg" },
+            { category: ["ぼくらの", "All"], title: "黄金の日々", albumName: "ぼくらの", img: "images/img_ep_bokurano.jpg" },
+            { category: ["ぼくらの", "All"], title: "白雪", albumName: "ぼくらの", img: "images/img_ep_bokurano.jpg" },
+
+            // Under Blue
+            { category: ["Under Blue", "All"], title: "lazy cat", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "ティーンエイジブルー", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "逃避行", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "虎狼来", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "ファイトソング", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "花星", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "冒険録", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "Byme", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "巻物語", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "インソムニア", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "Bubble feat. Uta", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "スイートメモリー", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "白雪", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "Midnight Runway", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "ぼくらの", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "花嵐", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "さよならエンドロール", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "Under Blue", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+            { category: ["Under Blue", "All"], title: "夢に逢えたら", albumName: "Under Blue", img: "images/img_underblue.jpg" },
+
+            // AIYOU
+            { category: ["AIYOU", "All"], title: "AIYOU", albumName: "AIYOU", img: "images/img_ep_aiyou.jpg" },
+            { category: ["AIYOU", "All"], title: "デーモンダンストーキョー[Reproduct]", albumName: "AIYOU", img: "images/img_ep_aiyou.jpg" },
+            { category: ["AIYOU", "All"], title: "あびすいんざわーるど", albumName: "AIYOU", img: "images/img_ep_aiyou.jpg" },
+
+            // CD x
+            { category: ["CD x", "All"], title: "いのちの食べ方 (DanceMix ver.)", albumName: "群青讃歌 / 遊生夢死", img: "images/img_gunjoyusei.jpg" },
+            { category: ["CD x", "All"], title: "ドラマツルギー (Live Film ver.)", albumName: "群青讃歌 / 遊生夢死", img: "images/img_gunjoyusei.jpg" },
+            { category: ["CD x", "All"], title: "pray", albumName: "pray", img: "images/img_pray.jpg" },
+            { category: ["CD x", "All"], title: "フラットウッズのモンスターみたいに", albumName: "フラットウッズのモンスターみたいに", img: "images/img_flatwoods.jpg" },
+            { category: ["CD x", "All"], title: "feel like", albumName: "feel like", img: "images/img_feellike.jpg" },
+            { category: ["CD x", "All"], title: "ゴーストアベニュー", albumName: "ゴーストアベニュー", img: "images/img_ghostavenue.jpg" },
+            { category: ["CD x", "All"], title: "アイオライト", albumName: "アイオライト", img: "images/img_iolite.jpg" },
+            { category: ["CD x", "All"], title: "Glorious Day", albumName: "アイオライト", img: "images/img_iolite.jpg" },
+            { category: ["CD x", "All"], title: "Underdog", albumName: "Underdog", img: "images/img_underdog.jpg" },
+            { category: ["CD x", "All"], title: "風のアンセム(feat. suis from ヨルシカ)", albumName: "風のアンセム(feat. suis from ヨルシカ)", img: "images/img_kazenoanthem.jpg" },
+
+            // Vocaloid
+            { category: ["Vocaloid", "All"], title: "sister", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "ナンセンス文学", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "あの娘シークレット", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "ドラマツルギー", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "お気に召すまま", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "アウトサイダー", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "トーキョーゲットー", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "ラストダンス", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "僕らまだアンダーグラウンド", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "やどりぎ", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "心予報", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "群青讃歌", albumName: "Eve Vocaloid 01", img: "images/img_vocaloid01.jpg" },
+            { category: ["Vocaloid", "All"], title: "Glorious Day", albumName: "Glorious Day", img: "images/img_gloriousday.jpg" },
+
+            // Album
+            { category: ["Album"], title: "Wonder Word", albumName: "1st Mini Album", img: "images/img_wonderword.jpg" },
+            { category: ["Album"], title: "Round Robin", albumName: "2nd Album", img: "images/img_roundrobin.jpg" },
+            { category: ["Album"], title: "OFFICIAL NUMBER", albumName: "3rd Album", img: "images/img_officialnumber.jpg" },
+            { category: ["Album"], title: "文化", albumName: "4th Album", img: "images/img_bunka.jpg" },
+            { category: ["Album"], title: "おとぎ", albumName: "Major 1st Album", img: "images/img_otogi.jpg" },
+            { category: ["Album"], title: "Smile", albumName: "Major 2nd Album", img: "images/img_smile.jpg" },
+            { category: ["Album"], title: "廻廻奇譚 / 蒼のワルツ", albumName: "EP", img: "images/img_kaikaiwarutsu.jpg" },
+            { category: ["Album"], title: "廻人", albumName: "Major 3rd Album", img: "images/img_kaizin.jpg" },
+            { category: ["Album"], title: "ぼくらの", albumName: "EP", img: "images/img_ep_bokurano.jpg" },
+            { category: ["Album"], title: "Under Blue", albumName: "Major 4th Full Album", img: "images/img_underblue.jpg" },
+            { category: ["Album"], title: "AIYOU", albumName: "EP", img: "images/img_ep_aiyou.jpg" },
+            { category: ["Album"], title: "Eve Vocaloid 01", albumName: "Vocaloid 1st Album", img: "images/img_vocaloid01.jpg" }
+        ];
+
+        let currentActiveCard = null;
+
+        function openAlbumSelector(cardElement) {
+            currentActiveCard = cardElement;
+            const category = cardElement.getAttribute('data-category');
+            
+            const modal = document.getElementById('album-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const listContainer = document.getElementById('album-list');
+            
+            modalTitle.innerText = `'${category}' 선택하기`;
+            listContainer.innerHTML = '';
+
+            const filteredData = albumDatabase.filter(item => item.category.includes(category));
+
+            if (filteredData.length === 0) {
+                listContainer.innerHTML = `<p class="col-span-2 text-center text-gray-400 py-8 text-sm">등록된 곡이 없습니다.<br>코드를 수정해 데이터를 추가해 주세요!</p>`;
+            } else {
+                filteredData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "flex flex-col items-center bg-gray-50 hover:bg-gray-100 p-2 rounded-xl cursor-pointer transition border border-gray-200";
+                    div.innerHTML = `
+                        <div class="w-full aspect-square relative rounded-lg overflow-hidden mb-2">
+                              <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover">
+                        </div>
+                        <p class="text-xs font-bold text-gray-800 text-center">${item.title}</p>
+                        <p class="text-[10px] text-gray-500 text-center">${item.albumName}</p>
+                    `;
+                    div.onclick = () => selectAlbumItem(item);
+                    listContainer.appendChild(div);
+                });
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAlbumSelector() {
+            document.getElementById('album-modal').classList.add('hidden');
+        }
+
+        function selectAlbumItem(item) {
+            if (!currentActiveCard) return;
+
+            const imgTag = currentActiveCard.querySelector('img');
+            const placeholders = currentActiveCard.querySelectorAll('span');
+            const titleTag = currentActiveCard.parentElement.querySelector('.song-title');
+
+            imgTag.src = item.img;
+            imgTag.classList.remove('hidden');
+            placeholders.forEach(el => el.classList.add('hidden'));
+
+            currentActiveCard.classList.remove('border-2', 'border-dashed', 'border-gray-300', 'hover:border-gray-400');
+            titleTag.innerText = item.title;
+
+            closeAlbumSelector();
+        }
+
+        function downloadImage() {
+            const nicknameField = document.getElementById('nickname-input');
+            const currentText = nicknameField.innerText.trim();
+    
+            if (!currentText || currentText === '닉네임 입력') {
+                 nicknameField.innerText = '익명';
+            }
+
+            const target = document.getElementById('capture-area');
+            html2canvas(target, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'artist-music-taste.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
